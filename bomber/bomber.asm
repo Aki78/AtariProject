@@ -16,6 +16,19 @@ JetXPos    byte    ; player0 x-pos
 JetYPos    byte    ; player0 y-pos
 BomberXPos byte    ; player1 x-pos
 BomberYPos byte    ; player1 y-pos
+
+JetSpritePtr     word ; pointer to player0 sprite lookup table
+JetColorPtr       word ; pointer to player0 sprite Color
+BomberSpritePtr   word ; pointer to player1 sprite lookup table
+BomberColorPtr    word ; pointer to player1 sprite Color
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; define constants
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+JET_HEIGHT = 9
+BOMBER_HEIGHT = 9
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; start rom code at memory address $F000 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -32,6 +45,40 @@ Reset:
 
 	lda #60
 	sta JetXPos    ; JetXPos = 60
+
+	lda #83
+	sta BomberYPos ; BomberYPos = 83
+
+
+	lda #54
+	sta BomberXPos ; BomberYPos = 54
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; initialize the pointers to the correct lookup table addresses
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	lda #<JetSprite
+	sta JetSpritePtr    ;lo-byt pointer for jet sprite lookup
+	lda #>JetSprite
+	sta JetSpritePtr+1   ;hi-byte pointer for jet sprite lookup
+
+
+	lda #<JetColor
+	sta JetColorPtr    ;lo-byt pointer for jet color
+	lda #>JetColor
+	sta JetColorPtr+1   ;hi-byte pointer for jet color
+
+	lda #<BomberSprite
+	sta BomberSpritePtr    ;lo-byt pointer for Bomber sprite lookup
+	lda #>BomberSprite
+	sta BomberSpritePtr+1   ;hi-byte pointer for Bomber sprite lookup
+
+
+	lda #<BomberColor
+	sta BomberColorPtr    ;lo-byt pointer for Bomber color
+	lda #>BomberColor
+	sta BomberColorPtr+1   ;hi-byte pointer for Bomber color
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; start the main display loop and frame rendering
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -95,6 +142,78 @@ GameVisibleLine:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	jmp StartFrame    ;continue to display the next frame
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Declare ROM lookup tables
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Declare ROM lookup tables
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+JetSprite:
+    .byte #%00000000         ;
+    .byte #%00010100         ;   # #
+    .byte #%01111111         ; #######
+    .byte #%00111110         ;  #####
+    .byte #%00011100         ;   ###
+    .byte #%00011100         ;   ###
+    .byte #%00001000         ;    #
+    .byte #%00001000         ;    #
+    .byte #%00001000         ;    #
+
+JetSpriteTurn:
+    .byte #%00000000         ;
+    .byte #%00001000         ;    #
+    .byte #%00111110         ;  #####
+    .byte #%00011100         ;   ###
+    .byte #%00011100         ;   ###
+    .byte #%00011100         ;   ###
+    .byte #%00001000         ;    #
+    .byte #%00001000         ;    #
+    .byte #%00001000         ;    #
+
+BomberSprite:
+    .byte #%00000000         ;
+    .byte #%00001000         ;    #
+    .byte #%00001000         ;    #
+    .byte #%00101010         ;  # # #
+    .byte #%00111110         ;  #####
+    .byte #%01111111         ; #######
+    .byte #%00101010         ;  # # #
+    .byte #%00001000         ;    #
+    .byte #%00011100         ;   ###
+
+JetColor:
+    .byte #$00
+    .byte #$FE
+    .byte #$0C
+    .byte #$0E
+    .byte #$0E
+    .byte #$04
+    .byte #$BA
+    .byte #$0E
+    .byte #$08
+
+JetColorTurn:
+    .byte #$00
+    .byte #$FE
+    .byte #$0C
+    .byte #$0E
+    .byte #$0E
+    .byte #$04
+    .byte #$0E
+    .byte #$0E
+    .byte #$08
+
+BomberColor:
+    .byte #$00
+    .byte #$32
+    .byte #$32
+    .byte #$0E
+    .byte #$40
+    .byte #$40
+    .byte #$40
+    .byte #$40
+    .byte #$40
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
