@@ -449,9 +449,10 @@ FireWorked subroutine
     lda #1
     sta CanShootFirework     ; allow to refire firework
 
-    lda MissileXPos
+    lda MissileXPos          ; P1 firework animation point set
+    sec                      ; P1 is the firework, missile 1 is the player 1
+    sbc #10
     sta BomberXPos
-
 
     sed
     lda Score
