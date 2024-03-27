@@ -386,15 +386,15 @@ EndInputCheck:               ; fallback when no input was performed
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Calculations to update position for next frame
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-UpdateBomberPosition:
-    lda BomberYPos
-    clc
-    cmp #0                   ; compare bomber y-position with 0
-    bmi .ResetBomberPosition ; if it is < 0, then reset y-position to the top
-    dec BomberYPos           ; else, decrement enemy y-position for next frame
-    jmp EndPositionUpdate
-.ResetBomberPosition:
-    jsr GetRandomBomberPos   ; call subroutine for random bomber position
+;UpdateBomberPosition:
+;    lda BomberYPos
+;    clc
+;    cmp #0                   ; compare bomber y-position with 0
+;    bmi .ResetBomberPosition ; if it is < 0, then reset y-position to the top
+;    dec BomberYPos           ; else, decrement enemy y-position for next frame
+;    jmp EndPositionUpdate
+;.ResetBomberPosition:
+;    jsr GetRandomBomberPos   ; call subroutine for random bomber position
 
 .SetScoreValues:
     sed                      ; set BCD mode for score and timer values
