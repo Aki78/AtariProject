@@ -76,6 +76,8 @@ Reset:
 ;; Declare a MACRO to check if we should display the missile 0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     MAC DRAW_MISSILE
+;	lda #4               ; stretching missile not working
+;	sta HMM0
         lda #%00000000
         cpx MissileYPos      ; compare X (current scanline) with missile Y pos
         bne .SkipMissileDraw ; if (X != missile Y position), then skip draw
