@@ -62,8 +62,8 @@ Reset:
     sta JetYPos              ; JetYPos = 10
     lda #62
     sta BomberXPos           ; BomberXPos = 62
-    lda #83
-    sta BomberYPos           ; BomberYPos = 83
+    lda #75
+    sta BomberYPos           ; BomberYPos = 75
     lda #%11010100
     sta Random               ; Random = $D4
     lda #0
@@ -448,6 +448,11 @@ EndCollisionCheck:           ; fallback
 FireWorked subroutine
     lda #1
     sta CanShootFirework     ; allow to refire firework
+
+    lda MissileXPos
+    sta BomberXPos
+
+
     sed
     lda Score
     clc
