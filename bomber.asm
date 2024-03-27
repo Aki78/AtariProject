@@ -18,6 +18,8 @@ BomberXPos      byte         ; player 1 x-position
 BomberYPos      byte         ; player 1 y-position
 MissileXPos     byte         ; missile x-position
 MissileYPos     byte         ; missile y-position
+MissileArrowXPos     byte         ; missile x-position
+MissileArrowYPos     byte         ; missile y-position
 Score           byte         ; 2-digit score stored as BCD
 Timer           byte         ; 2-digit timer stored as BCD
 Temp            byte         ; auxiliary variable to store temp values
@@ -33,6 +35,7 @@ ScoreSprite     byte         ; store the sprite bit pattern for the score
 TimerSprite     byte         ; store the sprite bit pattern for the timer
 TerrainColor    byte         ; store the color of the terrain playfield
 RiverColor      byte         ; store the color of the river playfield
+CanShootFirework byte        ; Checking if P0 can shoot a firework
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Define constants
@@ -66,6 +69,8 @@ Reset:
     lda #0
     sta Score                ; Score = 0
     sta Timer                ; Timer = 0
+    lda #1
+    sta CanShootFirework    ; CanShootFirework = True
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Declare a MACRO to check if we should display the missile 0
@@ -353,7 +358,13 @@ CheckButtonPressed:
     lda #%10000000           ; if button is pressed
     bit INPT4
     bne EndInputCheck
+
+    lda #1
+    cmp CanShootFirework     ; checking if firework can be fired
+    bne EndInputCheck
 .ButtonPressed:
+    lda #0
+    sta CanShootFirework
     lda JetXPos
     clc
     adc #5
@@ -415,6 +426,7 @@ CheckCollisionM0P1:
     lda #0
     sta MissileYPos          ; reset the missile position
 
+
 EndCollisionCheck:           ; fallback
     sta CXCLR                ; clear all collision flags before the next frame
 
@@ -422,6 +434,20 @@ EndCollisionCheck:           ; fallback
 ;; Loop back to start a brand new frame
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     jmp StartFrame           ; continue to display the next frame
+
+
+
+
+FireWorked subroutine
+    sed
+    lda Score
+    clc
+    adc #1
+    sta Score                ; adds 1 to the Score using decimal mode
+    cld
+    lda #0
+    sta MissileYPos          ; reset the missile position
+    rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Generate audio for the jet engine sound based on the jet y-position
