@@ -55,7 +55,7 @@ Reset:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     lda #68
     sta JetXPos              ; JetXPos = 68
-    lda #10
+    lda #0
     sta JetYPos              ; JetYPos = 10
     lda #62
     sta BomberXPos           ; BomberXPos = 62
@@ -309,7 +309,7 @@ CheckP0Up:
     cmp #70                  ; if (player0 Y position > 70)
     bpl CheckP0Down          ;    then: skip increment
 .P0UpPressed:                ;    else:
-    inc JetYPos              ;        increment Y position
+;    inc JetYPos              ;        increment Y position
     lda #0
     sta JetAnimOffset        ;        set jet animation frame to zero
 
