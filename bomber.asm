@@ -212,6 +212,8 @@ StartFrame:
     jsr Sleep12Cycles        ; waste some cycles
 
     dex                      ; X--
+
+
     sta PF1                  ; update the playfield for the Timer display
     bne .ScoreDigitLoop      ; if dex != 0, then branch to ScoreDigitLoop
 
@@ -225,6 +227,11 @@ StartFrame:
     sta WSYNC
     sta WSYNC
 
+    lda #75
+    cmp MissileYPos
+    bne .fireworkNotWorked
+    jsr FireWorked           ; firework was successful and got a score
+.fireworkNotWorked
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Display the remaining visible scanlines of our main game (2-line kernel)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -364,7 +371,7 @@ CheckButtonPressed:
     bne EndInputCheck
 .ButtonPressed:
     lda #0
-    sta CanShootFirework
+    sta CanShootFirework     ; can't fire firework
     lda JetXPos
     clc
     adc #5
@@ -439,6 +446,8 @@ EndCollisionCheck:           ; fallback
 
 
 FireWorked subroutine
+    lda #1
+    sta CanShootFirework     ; allow to refire firework
     sed
     lda Score
     clc
