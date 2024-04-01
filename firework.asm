@@ -198,27 +198,27 @@ StartFrame:
     jmp .SkipP1
 
 .SetArrowX
-    lda #0
+    lda #1
     cmp Shooting
     beq .test
     jmp .EndShooting
 
 .test
-    lda #80
+    lda #100
     cmp ArrowXPos
-    beq .ResetArrow
+    bcc .ResetArrow
+    inc ArrowXPos
     inc ArrowXPos
     jmp .EndShooting
 
 .ResetArrow
     lda #15
     sta ArrowXPos
+    lda #0
+    sta Shooting
     
 
 .EndShooting
-
-
-
 
     lda ArrowXPos
     ldy #1
