@@ -18,8 +18,8 @@ BomberXPos      byte         ; player 1 x-position
 BomberYPos      byte         ; player 1 y-position
 MissileXPos     byte         ; missile x-position
 MissileYPos     byte         ; missile y-position
-MissileArrowXPos     byte         ; missile x-position
-MissileArrowYPos     byte         ; missile y-position
+ArrowXPos       byte         ; missile x-position
+ArrowYPos       byte         ; missile y-position
 Score           byte         ; 2-digit score stored as BCD
 Timer           byte         ; 2-digit timer stored as BCD
 Temp            byte         ; auxiliary variable to store temp values
@@ -65,6 +65,10 @@ Reset:
     sta BomberXPos           ; BomberXPos = 62
     lda #75
     sta BomberYPos           ; BomberYPos = 75
+    lda #10
+    sta ArrowXPos           ; ArrowXPos = 10
+    lda #55
+    sta ArrowYPos           ; ArrowYPos = 55
     lda #%11010100
     sta Random               ; Random = $D4
     lda #0
@@ -101,7 +105,6 @@ Reset:
     sta JetColorPtr          ; lo-byte pointer for jet color lookup table
     lda #>JetColor
     sta JetColorPtr+1        ; hi-byte pointer for jet color lookup table
-
 
     lda #<ArrowSprite
     sta ArrowSpritePtr          ; lo-byte pointer for Arrow lookup table
@@ -235,6 +238,7 @@ StartFrame:
     sta WSYNC
     sta WSYNC
     sta WSYNC
+
 ;;;;; Firework successfully went off  ;;;;;
     lda #75
     cmp MissileYPos
@@ -261,6 +265,7 @@ GameVisibleLine:
     sta PF2                  ; setting PF2 bit pattern
 
     ldx #89                  ; X counts the number of remaining scanlines
+
 .GameLineLoop:
     DRAW_MISSILE             ; macro to check if we should draw the missile
 
@@ -271,6 +276,8 @@ GameVisibleLine:
     cmp #JET_HEIGHT          ; are we inside the sprite height bounds?
     bcc .DrawSpriteP0        ; if result < SpriteHeight, call the draw routine
     lda #0                   ; else, set lookup index to zero
+
+
 .DrawSpriteP0:
     clc                      ; clear carry flag before addition
     adc JetAnimOffset        ; jump to correct sprite frame address in memory
@@ -288,8 +295,22 @@ GameVisibleLine:
     cmp #BOMBER_HEIGHT       ; are we inside the sprite height bounds?
     bcc .DrawSpriteP1        ; if result < SpriteHeight, call the draw routine
     lda #0                   ; else, set lookup index to zero
+
+
+.AreWeInsideArrowSprite:
+    txa                      ; transfer X to A
+    sec                      ; make sure carry flag is set before subtraction
+    sbc ArrowYPos           ; subtract sprite Y-coordinate
+    cmp #BOMBER_HEIGHT       ; are we inside the sprite height bounds?
+    bcc .DrawArrowP1        ; if result < SpriteHeight, call the draw routine
+    lda #0                   ; else, set lookup index to zero
+
 .DrawSpriteP1:
+    
     tay                      ; load Y so we can work with the pointer
+
+    cpx #70                 ; Compare Y register with the value 70 
+    bcc .DrawArrowP1         ; Branch if Y < 70 so that the sprite don't glitch
 
     lda #%00000101
     sta NUSIZ1               ; stretch player 1 sprite
@@ -299,7 +320,18 @@ GameVisibleLine:
     sta GRP1                 ; set graphics for player1
     lda (BomberColorPtr),Y   ; load player color from lookup table
     sta COLUP1               ; set color of player 1
+    jmp .EndLoop
 
+.DrawArrowP1:
+    tay                      ; load Y so we can work with the pointer
+
+    lda (ArrowSpritePtr),Y  ; load player1 bitmap data from lookup table
+    sta WSYNC                ; wait for scanline
+    sta GRP1                 ; set graphics for player1
+    lda (ArrowSpritePtr),Y   ; load player color from lookup table
+
+.EndLoop
+;;; loop end ;;;
     dex                      ; X--
     bne .GameLineLoop        ; repeat next main game scanline until finished
 
@@ -424,6 +456,7 @@ CheckCollisionP0P1:
     bne .P0P1Collided        ; if collision P0 and P1 happened, then game over
     jsr SetGreenBlueTerrain  ; else, set river and terrain to green and blue
     jmp CheckCollisionM0P1   ; check next possible collision
+
 .P0P1Collided:
     jsr GameOver             ; call GameOver subroutine
 
@@ -432,6 +465,7 @@ CheckCollisionM0P1:
     bit CXM0P                ; check CXM0P bit 7 with the above pattern
     bne .M0P1Collided        ; collision missile 0 and player 1 happened
     jmp EndCollisionCheck
+
 .M0P1Collided:
     sed
     lda Score
@@ -549,28 +583,28 @@ GameOver subroutine
 ;; Add 30 to compensate for the left green playfield
 ;; The routine also sets the Y-position of the bomber to the top of the screen.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-GetRandomBomberPos subroutine
-    lda Random
-    asl
-    eor Random
-    asl
-    eor Random
-    asl
-    asl
-    eor Random
-    asl
-    rol Random               ; performs a series of shifts and bit operations
-    lsr
-    lsr                      ; divide the value by 4 with 2 right shifts
-    sta BomberXPos           ; save it to the variable BomberXPos
-    lda #30
-    adc BomberXPos           ; adds 30 + BomberXPos to compensate for left PF
-    sta BomberXPos           ; and sets the new value to the bomber x-position
-
-    lda #96
-    sta BomberYPos           ; set the y-position to the top of the screen
-
-    rts
+;GetRandomBomberPos subroutine
+;    lda Random
+;    asl
+;    eor Random
+;    asl
+;    eor Random
+;    asl
+;    asl
+;    eor Random
+;    asl
+;    rol Random               ; performs a series of shifts and bit operations
+;    lsr
+;    lsr                      ; divide the value by 4 with 2 right shifts
+;    sta BomberXPos           ; save it to the variable BomberXPos
+;    lda #30
+;    adc BomberXPos           ; adds 30 + BomberXPos to compensate for left PF
+;    sta BomberXPos           ; and sets the new value to the bomber x-position
+;
+;    lda #96
+;    sta BomberYPos           ; set the y-position to the top of the screen
+;
+;    rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Subroutine to handle scoreboard digits to be displayed on the screen
