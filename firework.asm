@@ -40,7 +40,8 @@ CanShootFirework byte        ; Checking if P0 can shoot a firework
 FireIsWorking   byte        ; Checking if Firework animation is going
 Shooting   byte        ; Checking if Arrow Shoot is Ture or False
 
-FrameNumber     byte        ; every frame is +1
+FrameNumber       byte        ; every frame is +1
+FireWorkTimer     byte        ; 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Define constants
@@ -81,6 +82,7 @@ Reset:
     sta FireIsWorking        ; FireIsWorking = False 
     sta FrameNumber          ; FrameNumber = 0 
     sta Shooting                ; Shooting = False
+    sta FireWorkTimer        ;FireWorkTimer = 0
     lda #1
     sta CanShootFirework    ; CanShootFirework = True
 
@@ -157,10 +159,12 @@ StartFrame:
     cmp #128            ; just for debugging P1 (firework/bomber) logic
     bcc .SetTrue
     jmp .SetFalse
+
 .SetTrue
     lda #1
     sta FireIsWorking
     jmp .EndCond
+
 .SetFalse
     lda #0
     sta FireIsWorking
@@ -584,7 +588,7 @@ CheckCollisionM0P1:
     cld
     lda #0
     sta MissileYPos          ; reset the missile position
-    lda #1
+    lda #1                   ; resetting so that firework can be shot again
     sta CanShootFirework          ; 
 
 
@@ -600,6 +604,9 @@ EndCollisionCheck:           ; fallback
 
 
 FireWorked subroutine
+    lda #20                  ; turn on timer by setting it 20
+    sta FireWorkTimer
+
     lda #1
     sta CanShootFirework     ; allow to refire firework
 
