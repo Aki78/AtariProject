@@ -38,7 +38,7 @@ TerrainColor    byte         ; store the color of the terrain playfield
 RiverColor      byte         ; store the color of the river playfield
 CanShootFirework byte        ; Checking if P0 can shoot a firework
 FireIsWorking   byte        ; Checking if Firework animation is going
-Shoot   byte        ; Checking if Arrow Shoot is Ture or False
+Shooting   byte        ; Checking if Arrow Shoot is Ture or False
 
 FrameNumber     byte        ; every frame is +1
 
@@ -70,7 +70,7 @@ Reset:
     lda #75
     sta BomberYPos           ; BomberYPos = 75
     lda #15
-    sta ArrowXPos           ; ArrowXPos = 60
+    sta ArrowXPos           ; ArrowXPos = 15
     lda #55
     sta ArrowYPos           ; ArrowYPos = 55
     lda #%11010100
@@ -80,7 +80,7 @@ Reset:
     sta Timer                ; Timer = 0
     sta FireIsWorking        ; FireIsWorking = False 
     sta FrameNumber          ; FrameNumber = 0 
-    sta Shoot                ; Shoot = False
+    sta Shooting                ; Shooting = False
     lda #1
     sta CanShootFirework    ; CanShootFirework = True
 
@@ -101,22 +101,6 @@ Reset:
     ENDM
 
 
-
-;;; Update ArrowXPos 
-;    MAC UPDATE_ARROWXPOS
-;        ldy #80
-;        cpy ArrowXPos      ;
-;        beq .SetReady        ;
-;.UpdateArrowXPos:                ;
-;        inc ArrowXPos      ;     ArrowXPos++ Broken
-;        jmp .EndShoot
-;.SetReady:
-;        lda #15            ; resetting arrow position
-;        sta ArrowXPos            ; resetting arrow position
-;        lda #0
-;        sta Shoot
-;.EndShoot
-;    ENDM
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Initialize the pointers to the correct lookup table adresses
@@ -185,13 +169,18 @@ StartFrame:
 .EndCond
 
     lda #0
-    REPEAT 30                ; not 37 vecayse some operations are made
+    REPEAT 29                ; not 37 vecayse some operations are made
         sta WSYNC            ; display the recommended lines of VBLANK
     REPEND
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Calculations and tasks performed during the VBLANK section
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+
+
+
     lda JetXPos
     ldy #0
     jsr SetObjectXPos        ; set player0 horizontal position
@@ -202,7 +191,6 @@ StartFrame:
     jmp .SetArrowX        ; ptjerwose seet arrow x pos
 
 
-
 .SetBomberX
     lda BomberXPos
     ldy #1
@@ -210,12 +198,36 @@ StartFrame:
     jmp .SkipP1
 
 .SetArrowX
+    lda #0
+    cmp Shooting
+    beq .test
+    jmp .EndShooting
+
+.test
+    lda #80
+    cmp ArrowXPos
+    beq .ResetArrow
+    inc ArrowXPos
+    jmp .EndShooting
+
+.ResetArrow
+    lda #15
+    sta ArrowXPos
+    
+
+.EndShooting
+
+
+
+
     lda ArrowXPos
     ldy #1
     jsr SetObjectXPos        ; set player1 horizontal position
     jmp .SkipP1
 
 .SkipP1
+    lda #0
+    sta WSYNC
 
     lda MissileXPos
     ldy #2
@@ -401,7 +413,6 @@ GameVisibleLine:
     cpy #1                   ; if true, don't draw arrow
     beq .EndLoop
 
-
     tay                      ; load Y so we can work with the pointer
 
     lda (ArrowSpritePtr),Y  ; load player1 bitmap data from lookup table
@@ -422,6 +433,7 @@ GameVisibleLine:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Display VBLANK Overscan
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
     lda #2
     sta VBLANK               ; turn on VBLANK again to display overscan
     REPEAT 30
@@ -515,8 +527,8 @@ CheckFButtonPressed:
 ;    bne EndInputCheck
 
 .ButtonFPressed:
-    lda #1                 ; Shoot = True
-    sta Shoot          ; set the arrow X position 
+    lda #1                 ; Shooting = True
+    sta Shooting          ; set the arrow X position 
     
 
 EndInputCheck:               ; fallback when no input was performed
