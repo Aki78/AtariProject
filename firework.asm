@@ -37,6 +37,8 @@ TimerSprite     byte         ; store the sprite bit pattern for the timer
 TerrainColor    byte         ; store the color of the terrain playfield
 RiverColor      byte         ; store the color of the river playfield
 CanShootFirework byte        ; Checking if P0 can shoot a firework
+FireIsWorking   byte        ; Checking if Firework animation is going
+FrameNumber     byte        ; every frame is +1
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Define constants
@@ -65,8 +67,8 @@ Reset:
     sta BomberXPos           ; BomberXPos = 62
     lda #75
     sta BomberYPos           ; BomberYPos = 75
-    lda #10
-    sta ArrowXPos           ; ArrowXPos = 10
+    lda #15
+    sta ArrowXPos           ; ArrowXPos = 60
     lda #55
     sta ArrowYPos           ; ArrowYPos = 55
     lda #%11010100
@@ -74,6 +76,8 @@ Reset:
     lda #0
     sta Score                ; Score = 0
     sta Timer                ; Timer = 0
+    sta FireIsWorking        ; FireIsWorking = False 
+    sta FrameNumber          ; FrameNumber = 0 
     lda #1
     sta CanShootFirework    ; CanShootFirework = True
 
@@ -148,9 +152,26 @@ StartFrame:
     ldy #0
     jsr SetObjectXPos        ; set player0 horizontal position
 
+    lda #0                ; is false
+    cmp FireIsWorking     ; checking weather set xpos for firework or bomber 
+    bne .SetBomberX       ; if FireworkIsWorking = False, set bomber x pos
+    jmp .SetArrowX        ; ptjerwose seet arrow x pos
+
+
+
+.SetBomberX
     lda BomberXPos
     ldy #1
     jsr SetObjectXPos        ; set player1 horizontal position
+    jmp .SkipP1
+
+.SetArrowX
+    lda ArrowXPos
+    ldy #1
+    jsr SetObjectXPos        ; set player1 horizontal position
+    jmp .SkipP1
+
+.SkipP1
 
     lda MissileXPos
     ldy #2
@@ -306,11 +327,10 @@ GameVisibleLine:
     lda #0                   ; else, set lookup index to zero
 
 .DrawSpriteP1:
-    
-    tay                      ; load Y so we can work with the pointer
-
     cpx #70                 ; Compare Y register with the value 70 
     bcc .DrawArrowP1         ; Branch if Y < 70 so that the sprite don't glitch
+    
+    tay                      ; load Y so we can work with the pointer
 
     lda #%00000101
     sta NUSIZ1               ; stretch player 1 sprite
@@ -323,6 +343,9 @@ GameVisibleLine:
     jmp .EndLoop
 
 .DrawArrowP1:
+    cpx #70                 ; Compare Y register with the value 70 
+    bcs .EndLoop         ; Branch if Y < 70 so that the sprite don't glitch
+    beq .EndLoop         ; 
     tay                      ; load Y so we can work with the pointer
 
     lda (ArrowSpritePtr),Y  ; load player1 bitmap data from lookup table
