@@ -38,6 +38,8 @@ TerrainColor    byte         ; store the color of the terrain playfield
 RiverColor      byte         ; store the color of the river playfield
 CanShootFirework byte        ; Checking if P0 can shoot a firework
 FireIsWorking   byte        ; Checking if Firework animation is going
+Shoot   byte        ; Checking if Arrow Shoot is Ture or False
+
 FrameNumber     byte        ; every frame is +1
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -78,6 +80,7 @@ Reset:
     sta Timer                ; Timer = 0
     sta FireIsWorking        ; FireIsWorking = False 
     sta FrameNumber          ; FrameNumber = 0 
+    sta Shoot                ; Shoot = False
     lda #1
     sta CanShootFirework    ; CanShootFirework = True
 
@@ -96,6 +99,24 @@ Reset:
 .SkipMissileDraw:
         sta ENAM0            ; store correct value in the TIA missile register
     ENDM
+
+
+
+;;; Update ArrowXPos 
+;    MAC UPDATE_ARROWXPOS
+;        ldy #80
+;        cpy ArrowXPos      ;
+;        beq .SetReady        ;
+;.UpdateArrowXPos:                ;
+;        inc ArrowXPos      ;     ArrowXPos++ Broken
+;        jmp .EndShoot
+;.SetReady:
+;        lda #15            ; resetting arrow position
+;        sta ArrowXPos            ; resetting arrow position
+;        lda #0
+;        sta Shoot
+;.EndShoot
+;    ENDM
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Initialize the pointers to the correct lookup table adresses
@@ -312,6 +333,7 @@ GameVisibleLine:
 
 .GameLineLoop:
     DRAW_MISSILE             ; macro to check if we should draw the missile
+;    UPDATE_ARROWXPOS             ; Broken, doesn't work
 
 .AreWeInsideJetSprite:
     txa                      ; transfer X to A
@@ -489,12 +511,13 @@ CheckFButtonPressed:
     bne EndInputCheck
 
     lda #1
-    cmp CanShootFirework     ; checking if firework can be fired
-    bne EndInputCheck
+;    cmp CanShootFirework     ; checking if firework can be fired
+;    bne EndInputCheck
 
 .ButtonFPressed:
-    lda #0
-    sta ArrowXPos          ; set the missile Y position equal to the player 0
+    lda #1                 ; Shoot = True
+    sta Shoot          ; set the arrow X position 
+    
 
 EndInputCheck:               ; fallback when no input was performed
 
