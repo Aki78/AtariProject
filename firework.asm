@@ -27,6 +27,7 @@ OnesDigitOffset word         ; lookup table offset for the score Ones digit
 TensDigitOffset word         ; lookup table offset for the score Tens digit
 JetSpritePtr    word         ; pointer to player0 sprite lookup table
 JetColorPtr     word         ; pointer to player0 color lookup table
+ArrowSpritePtr  word         ; pointer to Arrow sprite lookup table
 BomberSpritePtr word         ; pointer to player1 sprite lookup table
 BomberColorPtr  word         ; pointer to player1 color lookup table
 JetAnimOffset   byte         ; player0 frame offset for sprite animation
@@ -76,8 +77,8 @@ Reset:
 ;; Declare a MACRO to check if we should display the missile 0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     MAC DRAW_MISSILE
-;	lda #4               ; stretching missile not working
-;	sta HMM0
+	lda #%11111111               ; stretching missile not working
+	sta HMM0
         lda #%00000000
         cpx MissileYPos      ; compare X (current scanline) with missile Y pos
         bne .SkipMissileDraw ; if (X != missile Y position), then skip draw
@@ -100,6 +101,12 @@ Reset:
     sta JetColorPtr          ; lo-byte pointer for jet color lookup table
     lda #>JetColor
     sta JetColorPtr+1        ; hi-byte pointer for jet color lookup table
+
+
+    lda #<ArrowSprite
+    sta ArrowSpritePtr          ; lo-byte pointer for Arrow lookup table
+    lda #>ArrowSprite
+    sta ArrowSpritePtr+1        ; hi-byte pointer for Arrow lookup table
 
     lda #<BomberSprite
     sta BomberSpritePtr      ; lo-byte pointer for bomber sprite lookup table
@@ -228,7 +235,7 @@ StartFrame:
     sta WSYNC
     sta WSYNC
     sta WSYNC
-
+;;;;; Firework successfully went off  ;;;;;
     lda #75
     cmp MissileYPos
     bne .fireworkNotWorked
@@ -750,6 +757,18 @@ BomberSprite:
     .byte #%00101010         ;  # # #
     .byte #%00001000         ;    #
     .byte #%00011100         ;   ###
+
+
+ArrowSprite:
+    .byte #%00000000         ;
+    .byte #%00000000         ;     
+    .byte #%00000000         ;       
+    .byte #%00000000         ;      
+    .byte #%11111111         ; ########
+    .byte #%00000000         ;      
+    .byte #%00000000         ;     
+    .byte #%00000000         ;     
+    .byte #%00000000         ;     
 
 JetColor:
     .byte #$00
