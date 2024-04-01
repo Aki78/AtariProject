@@ -140,8 +140,31 @@ StartFrame:
         sta WSYNC            ; display 3 recommended lines of VSYNC
     REPEND
     lda #0
+
+
     sta VSYNC                ; turn off VSYNC
-    REPEAT 31                ; not 37 vecayse some operations are made
+    sta WSYNC            ; display the recommended lines of VBLANK
+
+    lda FrameNumber      ; incrementing Frame Number
+    adc #1
+    sta FrameNumber
+
+;    cmp #128            ; just for debugging P1 (firework/bomber) logic
+;    bcc .SetTrue
+;    jmp .SetFalse
+;.SetTrue
+;    lda #1
+;    sta FireIsWorking
+;    jmp .EndCond
+;.SetFalse
+;    lda #0
+;    sta FireIsWorking
+;    jmp .EndCond
+
+.EndCond
+
+    lda #0
+    REPEAT 30                ; not 37 vecayse some operations are made
         sta WSYNC            ; display the recommended lines of VBLANK
     REPEND
 
