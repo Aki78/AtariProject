@@ -579,11 +579,13 @@ CheckCollisionM0P1:
     sed
     lda Score
     clc
-    adc #1
+    sbc #1
     sta Score                ; adds 1 to the Score using decimal mode
     cld
     lda #0
     sta MissileYPos          ; reset the missile position
+    lda #1
+    sta CanShootFirework          ; 
 
 
 EndCollisionCheck:           ; fallback
