@@ -85,8 +85,8 @@ Reset:
 ;; Declare a MACRO to check if we should display the missile 0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     MAC DRAW_MISSILE
-	lda #%11111111               ; stretching missile not working
-	sta HMM0
+;	lda #%11111111               ; stretching missile not working
+;	sta HMM0
         lda #%00000000
         cpx MissileYPos      ; compare X (current scanline) with missile Y pos
         bne .SkipMissileDraw ; if (X != missile Y position), then skip draw
@@ -149,17 +149,17 @@ StartFrame:
     adc #1
     sta FrameNumber
 
-;    cmp #128            ; just for debugging P1 (firework/bomber) logic
-;    bcc .SetTrue
-;    jmp .SetFalse
-;.SetTrue
-;    lda #1
-;    sta FireIsWorking
-;    jmp .EndCond
-;.SetFalse
-;    lda #0
-;    sta FireIsWorking
-;    jmp .EndCond
+    cmp #128            ; just for debugging P1 (firework/bomber) logic
+    bcc .SetTrue
+    jmp .SetFalse
+.SetTrue
+    lda #1
+    sta FireIsWorking
+    jmp .EndCond
+.SetFalse
+    lda #0
+    sta FireIsWorking
+    jmp .EndCond
 
 .EndCond
 
@@ -352,6 +352,11 @@ GameVisibleLine:
 .DrawSpriteP1:
     cpx #70                 ; Compare Y register with the value 70 
     bcc .DrawArrowP1         ; Branch if Y < 70 so that the sprite don't glitch
+
+    ldy FireIsWorking
+    cpy #0                   ; if false, don't draw bomber
+    beq .DrawArrowP1
+
     
     tay                      ; load Y so we can work with the pointer
 
@@ -368,7 +373,13 @@ GameVisibleLine:
 .DrawArrowP1:
     cpx #70                 ; Compare Y register with the value 70 
     bcs .EndLoop         ; Branch if Y < 70 so that the sprite don't glitch
-    beq .EndLoop         ; 
+    beq .EndLoop         ; also when its equal
+
+    ldy FireIsWorking
+    cpy #1                   ; if true, don't draw arrow
+    beq .EndLoop
+
+
     tay                      ; load Y so we can work with the pointer
 
     lda (ArrowSpritePtr),Y  ; load player1 bitmap data from lookup table
@@ -431,6 +442,7 @@ CheckP0Left:
     lda JetXPos
     cmp #35                  ; if (player0 X position < 35)
     bmi CheckP0Right         ;    then: skip decrement
+
 .P0LeftPressed:              ;    else:
     dec JetXPos              ;        decrement X position
     lda #JET_HEIGHT
@@ -443,6 +455,7 @@ CheckP0Right:
     lda JetXPos
     cmp #100                 ; if (player0 X position > 100)
     bpl CheckButtonPressed   ;    then: skip increment
+
 .P0RightPressed:             ;    else:
     inc JetXPos              ;        increment X position
     lda #JET_HEIGHT
@@ -451,11 +464,12 @@ CheckP0Right:
 CheckButtonPressed:
     lda #%10000000           ; if button is pressed
     bit INPT4
-    bne EndInputCheck
+    bne CheckFButtonPressed
 
     lda #1
     cmp CanShootFirework     ; checking if firework can be fired
     bne EndInputCheck
+
 .ButtonPressed:
     lda #0
     sta CanShootFirework     ; can't fire firework
@@ -467,6 +481,20 @@ CheckButtonPressed:
     clc
     adc #8
     sta MissileYPos          ; set the missile Y position equal to the player 0
+
+
+CheckFButtonPressed:
+    lda #%10000000           ; if button is pressed
+    bit INPT5
+    bne EndInputCheck
+
+    lda #1
+    cmp CanShootFirework     ; checking if firework can be fired
+    bne EndInputCheck
+
+.ButtonFPressed:
+    lda #0
+    sta ArrowXPos          ; set the missile Y position equal to the player 0
 
 EndInputCheck:               ; fallback when no input was performed
 
@@ -842,11 +870,11 @@ BomberSprite:
 ArrowSprite:
     .byte #%00000000         ;
     .byte #%00000000         ;     
-    .byte #%00000000         ;       
-    .byte #%00000000         ;      
+    .byte #%00000100         ;      # 
+    .byte #%00000010         ;       #
     .byte #%11111111         ; ########
-    .byte #%00000000         ;      
-    .byte #%00000000         ;     
+    .byte #%00000010         ;       #
+    .byte #%00000100         ;      #
     .byte #%00000000         ;     
     .byte #%00000000         ;     
 
