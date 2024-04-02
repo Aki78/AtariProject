@@ -123,14 +123,14 @@ Reset:
     lda #>ArrowSprite
     sta ArrowSpritePtr+1        ; hi-byte pointer for Arrow lookup table
 
-    lda #<BomberSprite
+    lda #<FireSprite
     sta BomberSpritePtr      ; lo-byte pointer for bomber sprite lookup table
-    lda #>BomberSprite
+    lda #>FireSprite
     sta BomberSpritePtr+1    ; hi-byte pointer for bomber sprite lookup table
 
-    lda #<BomberColor
+    lda #<FireColor
     sta BomberColorPtr       ; lo-byte pointer for bomber color lookup table
-    lda #>BomberColor
+    lda #>FireColor
     sta BomberColorPtr+1     ; hi-byte pointer for bomber color lookup table
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -234,7 +234,7 @@ StartFrame:
     sta ArrowXPos
     lda #0
     sta Shooting
-    
+
 
 .EndShooting
 
@@ -929,6 +929,17 @@ BomberSprite:
     .byte #%00001000         ;    #
     .byte #%00011100         ;   ###
 
+FireSprite:
+    .byte #%00000000         ;$54
+    .byte #%01001001         ;$82
+    .byte #%00101010         ;$76
+    .byte #%00101100         ;$46
+    .byte #%11111111         ;$42
+    .byte #%00011100         ;$40
+    .byte #%00101011         ;$44
+    .byte #%01100010         ;$84
+    .byte #%10101001         ;$56
+
 
 ArrowSprite:
     .byte #%00000000         ;
@@ -973,6 +984,18 @@ BomberColor:
     .byte #$40
     .byte #$40
     .byte #$40
+
+FireColor:
+    .byte #$54
+    .byte #$82
+    .byte #$76
+    .byte #$46
+    .byte #$42
+    .byte #$40
+    .byte #$44
+    .byte #$84
+    .byte #$56
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Complete ROM size with exactly 4KB
