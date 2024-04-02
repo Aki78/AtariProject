@@ -50,7 +50,7 @@ FireWorkTimer     byte        ;
 JET_HEIGHT = 9               ; player0 sprite height (# rows in lookup table)
 BOMBER_HEIGHT = 9            ; player1 sprite height (# rows in lookup table)
 DIGITS_HEIGHT = 5            ; scoreboard digit height (#rows in lookup table)
-FIREWORK_TIME = 5            ; FIREWORK TIME
+FIREWORK_TIME = 50            ; FIREWORK TIME
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Start our ROM code at memory address $F000
@@ -413,7 +413,7 @@ GameVisibleLine:
     beq .DrawArrowP1
 
     clc                      ; clear carry flag before addition
-    dec BomberAnimOffset
+;    dec BomberAnimOffset
     adc BomberAnimOffset        ; jump to correct sprite frame address for firework anim
 
     tay                      ; load Y so we can work with the pointer
