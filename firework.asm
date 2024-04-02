@@ -82,9 +82,10 @@ Reset:
     sta FireIsWorking        ; FireIsWorking = False 
     sta FrameNumber          ; FrameNumber = 0 
     sta Shooting                ; Shooting = False
-    sta FireWorkTimer        ;FireWorkTimer = 0
     lda #1
     sta CanShootFirework    ; CanShootFirework = True
+    lda #20
+    sta FireWorkTimer        ;FireWorkTimer = 0
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Declare a MACRO to check if we should display the missile 0
@@ -148,27 +149,26 @@ StartFrame:
     REPEND
     lda #0
 
-
     sta VSYNC                ; turn off VSYNC
     sta WSYNC            ; display the recommended lines of VBLANK
 
     lda FrameNumber      ; incrementing Frame Number
     adc #1
     sta FrameNumber
-
-    cmp #128            ; just for debugging P1 (firework/bomber) logic
-    bcc .SetTrue
-    jmp .SetFalse
-
-.SetTrue
-    lda #1
-    sta FireIsWorking
-    jmp .EndCond
-
-.SetFalse
-    lda #0
-    sta FireIsWorking
-    jmp .EndCond
+;
+;    cmp #128            ; just for debugging P1 (firework/bomber) logic
+;    bcc .SetTrue
+;    jmp .SetFalse
+;
+;.SetTrue
+;    lda #1
+;    sta FireIsWorking
+;    jmp .EndCond
+;
+;.SetFalse
+;    lda #0
+;    sta FireIsWorking
+;    jmp .EndCond
 
 .EndCond
 
@@ -180,20 +180,33 @@ StartFrame:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Calculations and tasks performed during the VBLANK section
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Firework timer logic
+    lda #1
+    cmp FireIsWorking         ; if firework is going off, then start counting firework timer
+    bne .DontDecrementFireTime
+    dec FireWorkTimer
+.DontDecrementFireTime
 
 
+    lda #0
+    cmp FireWorkTimer
+    bne .ResetFireWork
+    lda #20
+    sta FireWorkTimer
+    lda #0
+    sta FireIsWorking
+.ResetFireWork
 
-
-
+;;;; jet x pos logic
     lda JetXPos
     ldy #0
     jsr SetObjectXPos        ; set player0 horizontal position
 
+;;;; Splitting bomber and arrow logic
     lda #0                ; is false
     cmp FireIsWorking     ; checking weather set xpos for firework or bomber 
     bne .SetBomberX       ; if FireworkIsWorking = False, set bomber x pos
     jmp .SetArrowX        ; ptjerwose seet arrow x pos
-
 
 .SetBomberX
     lda BomberXPos
@@ -204,13 +217,14 @@ StartFrame:
 .SetArrowX
     lda #1
     cmp Shooting
-    beq .test
+    beq .ShootLogic
     jmp .EndShooting
 
-.test
+.ShootLogic
     lda #100
     cmp ArrowXPos
     bcc .ResetArrow
+    inc ArrowXPos
     inc ArrowXPos
     inc ArrowXPos
     jmp .EndShooting
@@ -380,6 +394,8 @@ GameVisibleLine:
 
 
 .AreWeInsideArrowSprite:
+    lda #%00000101
+    sta NUSIZ1               ; stretch player 1 sprite
     txa                      ; transfer X to A
     sec                      ; make sure carry flag is set before subtraction
     sbc ArrowYPos           ; subtract sprite Y-coordinate
@@ -604,6 +620,9 @@ EndCollisionCheck:           ; fallback
 
 
 FireWorked subroutine
+    lda #1
+    sta FireIsWorking
+
     lda #20                  ; turn on timer by setting it 20
     sta FireWorkTimer
 
