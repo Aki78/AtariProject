@@ -108,9 +108,9 @@ Reset:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Initialize the pointers to the correct lookup table adresses
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    lda #<JetSprite
+    lda #<BoySpriteStand
     sta JetSpritePtr         ; lo-byte pointer for jet sprite lookup table
-    lda #>JetSprite
+    lda #>BoySpriteStand
     sta JetSpritePtr+1       ; hi-byte pointer for jet sprite lookup table
 
     lda #<JetColor
@@ -940,7 +940,6 @@ FireSprite:
     .byte #%01100010         ;$84
     .byte #%10101001         ;$56
 
-
 ArrowSprite:
     .byte #%00000000         ;
     .byte #%00000000         ;     
@@ -952,27 +951,68 @@ ArrowSprite:
     .byte #%00000000         ;     
     .byte #%00000000         ;     
 
+BoySpriteStand:
+    .byte #%00000000
+    .byte #%00011100
+    .byte #%00011110
+    .byte #%00011110
+    .byte #%01111110
+    .byte #%00001000
+    .byte #%00011000
+    .byte #%00111000
+    .byte #%00000000
+
+BoySpriteWalk:
+    .byte #%00000000
+    .byte #%00011100
+    .byte #%00011110
+    .byte #%00111110
+    .byte #%00111110
+    .byte #%00001000
+    .byte #%00011000
+    .byte #%00111000
+    .byte #%00000000
+
+
 JetColor:
+;    .byte #$00
+;    .byte #$FE
+;    .byte #$0C
+;    .byte #$0E
+;    .byte #$0E
+;    .byte #$04
+;    .byte #$BA
+;    .byte #$0E
+;    .byte #$08
     .byte #$00
-    .byte #$FE
-    .byte #$0C
-    .byte #$0E
-    .byte #$0E
-    .byte #$04
-    .byte #$BA
-    .byte #$0E
-    .byte #$08
+    .byte #$00
+    .byte #$00
+    .byte #$00
+    .byte #$00
+    .byte #$00
+    .byte #$00
+    .byte #$00
+    .byte #$00
 
 JetColorTurn:
+;    .byte #$00
+;    .byte #$FE
+;    .byte #$0C
+;    .byte #$0E
+;    .byte #$0E
+;    .byte #$04
+;    .byte #$0E
+;    .byte #$0E
+;    .byte #$08
     .byte #$00
-    .byte #$FE
-    .byte #$0C
-    .byte #$0E
-    .byte #$0E
-    .byte #$04
-    .byte #$0E
-    .byte #$0E
-    .byte #$08
+    .byte #$00
+    .byte #$00
+    .byte #$00
+    .byte #$00
+    .byte #$00
+    .byte #$00
+    .byte #$00
+    .byte #$00
 
 BomberColor:
     .byte #$00
