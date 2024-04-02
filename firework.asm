@@ -84,7 +84,7 @@ Reset:
     sta Shooting                ; Shooting = False
     lda #1
     sta CanShootFirework    ; CanShootFirework = True
-    lda #20
+    lda #5
     sta FireWorkTimer        ;FireWorkTimer = 0
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -123,12 +123,12 @@ Reset:
     lda #>ArrowSprite
     sta ArrowSpritePtr+1        ; hi-byte pointer for Arrow lookup table
 
-    lda #<Frame3
+    lda #<Frame0
     sta BomberSpritePtr      ; lo-byte pointer for bomber sprite lookup table
     lda #>Frame3
     sta BomberSpritePtr+1    ; hi-byte pointer for bomber sprite lookup table
 
-    lda #<ColorFrame3
+    lda #<ColorFrame0
     sta BomberColorPtr       ; lo-byte pointer for bomber color lookup table
     lda #>ColorFrame3
     sta BomberColorPtr+1     ; hi-byte pointer for bomber color lookup table
@@ -191,7 +191,7 @@ StartFrame:
     lda #0
     cmp FireWorkTimer
     bne .ResetFireWork
-    lda #20
+    lda #5
     sta FireWorkTimer
     lda #0
     sta FireIsWorking
@@ -623,7 +623,7 @@ FireWorked subroutine
     lda #1
     sta FireIsWorking
 
-    lda #20                  ; turn on timer by setting it 20
+    lda #5                  ; turn on timer by setting it 5
     sta FireWorkTimer
 
     lda #1
@@ -1070,7 +1070,18 @@ FireColor:
     .byte #$84
     .byte #$56
 
+
 Frame0:
+        .byte #%00000000;$40
+        .byte #%00000000;$40
+        .byte #%00000000;$40
+        .byte #%00000000;$40
+        .byte #%00000000;$40
+        .byte #%00000000;$40
+        .byte #%00000000;$46
+        .byte #%00000000;$40
+
+Frame1:
         .byte #%00000000;$40
         .byte #%00000000;$40
         .byte #%00011000;$40
@@ -1079,7 +1090,7 @@ Frame0:
         .byte #%00000000;$40
         .byte #%00000000;$46
         .byte #%00000000;$40
-Frame1:
+Frame2:
         .byte #%00000000;$44
         .byte #%00000000;$44
         .byte #%00000000;$44
@@ -1088,7 +1099,7 @@ Frame1:
         .byte #%01000010;$44
         .byte #%00000000;$46
         .byte #%00000000;$40
-Frame2:
+Frame3:
         .byte #%00000000;$54
         .byte #%00000000;$54
         .byte #%00000000;$54
@@ -1097,7 +1108,7 @@ Frame2:
         .byte #%00000000;$54
         .byte #%01001010;$54
         .byte #%10010001;$54
-Frame3:
+Frame4:
         .byte #%00000000;$1A
         .byte #%10000001;$1A
         .byte #%01000100;$1A
@@ -1111,38 +1122,48 @@ Frame3:
 
 
 ;---Color Data from PlayerPal 2600---
-
 ColorFrame0:
-        .byte #$40;
-        .byte #$40;
-        .byte #$40;
-        .byte #$40;
-        .byte #$40;
-        .byte #$40;
-        .byte #$46;
-        .byte #$40;
-        .byte #$40;
+        .byte #$00;
+        .byte #$00;
+        .byte #$00;
+        .byte #$00;
+        .byte #$00;
+        .byte #$00;
+        .byte #$06;
+        .byte #$00;
+        .byte #$00;
+
 ColorFrame1:
-        .byte #$44;
-        .byte #$44;
-        .byte #$44;
-        .byte #$44;
-        .byte #$44;
-        .byte #$44;
-        .byte #$44;
+        .byte #$40;
+        .byte #$40;
+        .byte #$40;
+        .byte #$40;
+        .byte #$40;
+        .byte #$40;
         .byte #$46;
+        .byte #$40;
         .byte #$40;
 ColorFrame2:
-        .byte #$54;
-        .byte #$54;
-        .byte #$54;
-        .byte #$54;
-        .byte #$54;
-        .byte #$54;
-        .byte #$54;
-        .byte #$54;
-        .byte #$54;
+        .byte #$44;
+        .byte #$44;
+        .byte #$44;
+        .byte #$44;
+        .byte #$44;
+        .byte #$44;
+        .byte #$44;
+        .byte #$46;
+        .byte #$40;
 ColorFrame3:
+        .byte #$54;
+        .byte #$54;
+        .byte #$54;
+        .byte #$54;
+        .byte #$54;
+        .byte #$54;
+        .byte #$54;
+        .byte #$54;
+        .byte #$54;
+ColorFrame4:
         .byte #$1A;
         .byte #$1A;
         .byte #$1A;
