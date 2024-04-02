@@ -108,14 +108,14 @@ Reset:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Initialize the pointers to the correct lookup table adresses
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    lda #<BoySpriteStand
+    lda #<Boy1
     sta JetSpritePtr         ; lo-byte pointer for jet sprite lookup table
-    lda #>BoySpriteStand
+    lda #>Boy1
     sta JetSpritePtr+1       ; hi-byte pointer for jet sprite lookup table
 
-    lda #<JetColor
+    lda #<BoyColor
     sta JetColorPtr          ; lo-byte pointer for jet color lookup table
-    lda #>JetColor
+    lda #>BoyColor
     sta JetColorPtr+1        ; hi-byte pointer for jet color lookup table
 
     lda #<ArrowSprite
@@ -123,14 +123,14 @@ Reset:
     lda #>ArrowSprite
     sta ArrowSpritePtr+1        ; hi-byte pointer for Arrow lookup table
 
-    lda #<FireSprite
+    lda #<Frame3
     sta BomberSpritePtr      ; lo-byte pointer for bomber sprite lookup table
-    lda #>FireSprite
+    lda #>Frame3
     sta BomberSpritePtr+1    ; hi-byte pointer for bomber sprite lookup table
 
-    lda #<FireColor
+    lda #<ColorFrame3
     sta BomberColorPtr       ; lo-byte pointer for bomber color lookup table
-    lda #>FireColor
+    lda #>ColorFrame3
     sta BomberColorPtr+1     ; hi-byte pointer for bomber color lookup table
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -973,6 +973,40 @@ BoySpriteWalk:
     .byte #%00111000
     .byte #%00000000
 
+Boy1:
+        .byte #%00000000;$0E
+        .byte #%00101000;$0E
+        .byte #%00101000;$0E
+        .byte #%00010000;$0E
+        .byte #%00111000;$0E
+        .byte #%01101100;$0E
+        .byte #%10111010;$0E
+        .byte #%00010000;$0E
+        .byte #%00000000;$0E
+
+Boy2:
+        .byte #%00000000;$0E
+        .byte #%00101000;$0E
+        .byte #%00101000;$0E
+        .byte #%00010000;$0E
+        .byte #%00111000;$0E
+        .byte #%01101100;$0E
+        .byte #%10111010;$0E
+        .byte #%00010000;$0E
+        .byte #%00000000;$0E
+
+
+
+BoyColor:
+        .byte #$0E;
+        .byte #$0E;
+        .byte #$0E;
+        .byte #$0E;
+        .byte #$0E;
+        .byte #$0E;
+        .byte #$0E;
+        .byte #$0E;
+;---End Color Data---
 
 JetColor:
 ;    .byte #$00
@@ -1036,6 +1070,88 @@ FireColor:
     .byte #$84
     .byte #$56
 
+Frame0:
+        .byte #%00000000;$40
+        .byte #%00000000;$40
+        .byte #%00011000;$40
+        .byte #%00011000;$40
+        .byte #%00011000;$40
+        .byte #%00000000;$40
+        .byte #%00000000;$46
+        .byte #%00000000;$40
+Frame1:
+        .byte #%00000000;$44
+        .byte #%00000000;$44
+        .byte #%00000000;$44
+        .byte #%00100100;$44
+        .byte #%00000000;$44
+        .byte #%01000010;$44
+        .byte #%00000000;$46
+        .byte #%00000000;$40
+Frame2:
+        .byte #%00000000;$54
+        .byte #%00000000;$54
+        .byte #%00000000;$54
+        .byte #%00000000;$54
+        .byte #%00000000;$54
+        .byte #%00000000;$54
+        .byte #%01001010;$54
+        .byte #%10010001;$54
+Frame3:
+        .byte #%00000000;$1A
+        .byte #%10000001;$1A
+        .byte #%01000100;$1A
+        .byte #%00001010;$1A
+        .byte #%10000000;$1A
+        .byte #%00000000;$1A
+        .byte #%00010010;$1A
+        .byte #%10000000;$1A
+        .byte #%00000001;$1A
+;---End Graphics Data---
+
+
+;---Color Data from PlayerPal 2600---
+
+ColorFrame0:
+        .byte #$40;
+        .byte #$40;
+        .byte #$40;
+        .byte #$40;
+        .byte #$40;
+        .byte #$40;
+        .byte #$46;
+        .byte #$40;
+        .byte #$40;
+ColorFrame1:
+        .byte #$44;
+        .byte #$44;
+        .byte #$44;
+        .byte #$44;
+        .byte #$44;
+        .byte #$44;
+        .byte #$44;
+        .byte #$46;
+        .byte #$40;
+ColorFrame2:
+        .byte #$54;
+        .byte #$54;
+        .byte #$54;
+        .byte #$54;
+        .byte #$54;
+        .byte #$54;
+        .byte #$54;
+        .byte #$54;
+        .byte #$54;
+ColorFrame3:
+        .byte #$1A;
+        .byte #$1A;
+        .byte #$1A;
+        .byte #$1A;
+        .byte #$1A;
+        .byte #$1A;
+        .byte #$1A;
+        .byte #$1A;
+        .byte #$1A;
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Complete ROM size with exactly 4KB
