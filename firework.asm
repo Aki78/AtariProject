@@ -31,6 +31,7 @@ ArrowSpritePtr  word         ; pointer to Arrow sprite lookup table
 BomberSpritePtr word         ; pointer to player1 sprite lookup table
 BomberColorPtr  word         ; pointer to player1 color lookup table
 JetAnimOffset   byte         ; player0 frame offset for sprite animation
+BomberAnimOffset   byte         ; player1 frame offset for sprite animation
 Random          byte         ; used to generate random bomber x-position
 ScoreSprite     byte         ; store the sprite bit pattern for the score
 TimerSprite     byte         ; store the sprite bit pattern for the timer
@@ -49,6 +50,7 @@ FireWorkTimer     byte        ;
 JET_HEIGHT = 9               ; player0 sprite height (# rows in lookup table)
 BOMBER_HEIGHT = 9            ; player1 sprite height (# rows in lookup table)
 DIGITS_HEIGHT = 5            ; scoreboard digit height (#rows in lookup table)
+FIREWORK_TIME = 5            ; FIREWORK TIME
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Start our ROM code at memory address $F000
@@ -84,7 +86,7 @@ Reset:
     sta Shooting                ; Shooting = False
     lda #1
     sta CanShootFirework    ; CanShootFirework = True
-    lda #5
+    lda #FIREWORK_TIME
     sta FireWorkTimer        ;FireWorkTimer = 0
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -185,16 +187,18 @@ StartFrame:
     cmp FireIsWorking         ; if firework is going off, then start counting firework timer
     bne .DontDecrementFireTime
     dec FireWorkTimer
+    inc BomberAnimOffset
 .DontDecrementFireTime
 
 
     lda #0
     cmp FireWorkTimer
     bne .ResetFireWork
-    lda #5
+    lda #FIREWORK_TIME
     sta FireWorkTimer
     lda #0
     sta FireIsWorking
+    sta BomberAnimOffset
 .ResetFireWork
 
 ;;;; jet x pos logic
@@ -363,7 +367,6 @@ GameVisibleLine:
 
 .GameLineLoop:
     DRAW_MISSILE             ; macro to check if we should draw the missile
-;    UPDATE_ARROWXPOS             ; Broken, doesn't work
 
 .AreWeInsideJetSprite:
     txa                      ; transfer X to A
@@ -372,7 +375,6 @@ GameVisibleLine:
     cmp #JET_HEIGHT          ; are we inside the sprite height bounds?
     bcc .DrawSpriteP0        ; if result < SpriteHeight, call the draw routine
     lda #0                   ; else, set lookup index to zero
-
 
 .DrawSpriteP0:
     clc                      ; clear carry flag before addition
@@ -392,7 +394,6 @@ GameVisibleLine:
     bcc .DrawSpriteP1        ; if result < SpriteHeight, call the draw routine
     lda #0                   ; else, set lookup index to zero
 
-
 .AreWeInsideArrowSprite:
     lda #%00000101
     sta NUSIZ1               ; stretch player 1 sprite
@@ -411,7 +412,10 @@ GameVisibleLine:
     cpy #0                   ; if false, don't draw bomber
     beq .DrawArrowP1
 
-    
+    clc                      ; clear carry flag before addition
+    dec BomberAnimOffset
+    adc BomberAnimOffset        ; jump to correct sprite frame address for firework anim
+
     tay                      ; load Y so we can work with the pointer
 
     lda #%00000101
@@ -484,6 +488,7 @@ CheckP0Down:
     lda JetYPos
     cmp #5                   ; if (player0 Y position < 5)
     bmi CheckP0Left          ;    then: skip decrement
+
 .P0DownPressed:              ;    else:
     dec JetYPos              ;        decrement Y position
     lda #0
@@ -621,9 +626,9 @@ EndCollisionCheck:           ; fallback
 
 FireWorked subroutine
     lda #1
-    sta FireIsWorking
+    sta FireIsWorking       ; FireIsWorking = True
 
-    lda #5                  ; turn on timer by setting it 5
+    lda #FIREWORK_TIME                  ; turn on timer by setting it 5
     sta FireWorkTimer
 
     lda #1
@@ -1080,6 +1085,7 @@ Frame0:
         .byte #%00000000;$40
         .byte #%00000000;$46
         .byte #%00000000;$40
+        .byte #%00000000;$40
 
 Frame1:
         .byte #%00000000;$40
@@ -1090,6 +1096,7 @@ Frame1:
         .byte #%00000000;$40
         .byte #%00000000;$46
         .byte #%00000000;$40
+        .byte #%00000000;$40
 Frame2:
         .byte #%00000000;$44
         .byte #%00000000;$44
@@ -1098,6 +1105,7 @@ Frame2:
         .byte #%00000000;$44
         .byte #%01000010;$44
         .byte #%00000000;$46
+        .byte #%00000000;$40
         .byte #%00000000;$40
 Frame3:
         .byte #%00000000;$54
@@ -1108,6 +1116,7 @@ Frame3:
         .byte #%00000000;$54
         .byte #%01001010;$54
         .byte #%10010001;$54
+        .byte #%00000000;$54
 Frame4:
         .byte #%00000000;$1A
         .byte #%10000001;$1A
