@@ -588,7 +588,7 @@ CheckCollisionP0P1:
     lda #%10000000           ; CXPPMM bit 7 detects P0 and P1 collision
     bit CXPPMM               ; check CXPPMM bit 7 with the above pattern
     bne .P0P1Collided        ; if collision P0 and P1 happened, then game over
-    jsr SetGreenBlueTerrain  ; else, set river and terrain to green and blue
+    jsr SetTerrain  ; else, set river and terrain to green and blue
     jmp CheckCollisionM0P1   ; check next possible collision
 
 .P0P1Collided:
@@ -689,10 +689,12 @@ GenerateJetSound subroutine
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Set the colors for the terrain and river to green & blue
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-SetGreenBlueTerrain subroutine
-    lda #$C2
+SetTerrain subroutine
+;    lda #$C2
+    lda #$03
     sta TerrainColor         ; set terrain color to green
-    lda #$84
+;    lda #$84
+    lda #$60
     sta RiverColor           ; set river color to blue
     rts
 
