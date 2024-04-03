@@ -657,10 +657,21 @@ FireWorked subroutine
 ;; We subtract 31 - (JetYPos/8) to achieve the desired final pitch value.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 GenerateJetSound subroutine
-    lda #3
+    lda #1
+    cmp FireIsWorking
+    beq .TurnSoundOn
+    jmp .TurnSoundOff
+.TurnSoundOn
+    lda #10
+    jmp .EndSoundLigic
+.TurnSoundOff
+    lda #0
+    jmp .EndSoundLigic
+.EndSoundLigic
+
     sta AUDV0                ; set the audio volume register
 
-    lda #8
+    lda #2
     sta AUDC0                ; set the audio control register to white noise
 
     lda JetYPos              ; loads the accumulator with the jet y-position
