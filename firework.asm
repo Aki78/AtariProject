@@ -47,7 +47,7 @@ FireWorkTimer     byte        ;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Define constants
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-JET_HEIGHT = 9               ; player0 sprite height (# rows in lookup table)
+BOY_HEIGHT = 9               ; player0 sprite height (# rows in lookup table)
 BOMBER_HEIGHT = 9            ; player1 sprite height (# rows in lookup table)
 DIGITS_HEIGHT = 5            ; scoreboard digit height (#rows in lookup table)
 FIREWORK_TIME = 50            ; FIREWORK TIME
@@ -93,8 +93,6 @@ Reset:
 ;; Declare a MACRO to check if we should display the missile 0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     MAC DRAW_MISSILE
-;	lda #%11111111               ; stretching missile not working
-;	sta HMM0
         lda #%00000000
         cpx MissileYPos      ; compare X (current scanline) with missile Y pos
         bne .SkipMissileDraw ; if (X != missile Y position), then skip draw
@@ -111,14 +109,14 @@ Reset:
 ;; Initialize the pointers to the correct lookup table adresses
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     lda #<Boy1
-    sta BoySpritePtr         ; lo-byte pointer for jet sprite lookup table
+    sta BoySpritePtr         ; lo-byte pointer for boy sprite lookup table
     lda #>Boy1
-    sta BoySpritePtr+1       ; hi-byte pointer for jet sprite lookup table
+    sta BoySpritePtr+1       ; hi-byte pointer for boy sprite lookup table
 
     lda #<BoyColor
-    sta BoyColorPtr          ; lo-byte pointer for jet color lookup table
+    sta BoyColorPtr          ; lo-byte pointer for boy color lookup table
     lda #>BoyColor
-    sta BoyColorPtr+1        ; hi-byte pointer for jet color lookup table
+    sta BoyColorPtr+1        ; hi-byte pointer for boy color lookup table
 
     lda #<ArrowSprite
     sta ArrowSpritePtr          ; lo-byte pointer for Arrow lookup table
@@ -157,20 +155,6 @@ StartFrame:
     lda FrameNumber      ; incrementing Frame Number
     adc #1
     sta FrameNumber
-;
-;    cmp #128            ; just for debugging P1 (firework/bomber) logic
-;    bcc .SetTrue
-;    jmp .SetFalse
-;
-;.SetTrue
-;    lda #1
-;    sta FireIsWorking
-;    jmp .EndCond
-;
-;.SetFalse
-;    lda #0
-;    sta FireIsWorking
-;    jmp .EndCond
 
 .EndCond
 
@@ -201,7 +185,7 @@ StartFrame:
     sta BomberAnimOffset
 .ResetFireWork
 
-;;;; jet x pos logic
+;;;; boy x pos logic
     lda BoyXPos
     ldy #0
     jsr SetObjectXPos        ; set player0 horizontal position
@@ -257,7 +241,7 @@ StartFrame:
 
     jsr CalculateDigitOffset ; calculate scoreboard digits lookup table offset
 
-    jsr GenerateBoySound     ; configure and enable our jet engine audio
+    jsr GenerateBoySound     ; configure and enable our boy engine audio
 
     sta WSYNC
     sta HMOVE                ; apply the horizontal offsets previously set
@@ -324,7 +308,6 @@ StartFrame:
 
     dex                      ; X--
 
-
     sta PF1                  ; update the playfield for the Timer display
     bne .ScoreDigitLoop      ; if dex != 0, then branch to ScoreDigitLoop
 
@@ -372,7 +355,7 @@ GameVisibleLine:
     txa                      ; transfer X to A
     sec                      ; make sure carry flag is set before subtraction
     sbc BoyYPos              ; subtract sprite Y-coordinate
-    cmp #JET_HEIGHT          ; are we inside the sprite height bounds?
+    cmp #BOY_HEIGHT          ; are we inside the sprite height bounds?
     bcc .DrawSpriteP0        ; if result < SpriteHeight, call the draw routine
     lda #0                   ; else, set lookup index to zero
 
@@ -413,7 +396,7 @@ GameVisibleLine:
     beq .DrawArrowP1
 
     clc                      ; clear carry flag before addition
-;    dec BomberAnimOffset
+
     adc BomberAnimOffset        ; jump to correct sprite frame address for firework anim
 
     tay                      ; load Y so we can work with the pointer
@@ -450,7 +433,7 @@ GameVisibleLine:
     bne .GameLineLoop        ; repeat next main game scanline until finished
 
     lda #0
-    sta BoyAnimOffset        ; reset jet animation frame to zero each frame
+    sta BoyAnimOffset        ; reset boy animation frame to zero each frame
 
     sta WSYNC                ; wait for a scanline
 
@@ -477,9 +460,8 @@ CheckP0Up:
     cmp #70                  ; if (player0 Y position > 70)
     bpl CheckP0Down          ;    then: skip increment
 .P0UpPressed:                ;    else:
-;    inc BoyYPos              ;        increment Y position
     lda #0
-    sta BoyAnimOffset        ;        set jet animation frame to zero
+    sta BoyAnimOffset        ;        set boy animation frame to zero
 
 CheckP0Down:
     lda #%00100000           ; joystick down for player 0
@@ -492,7 +474,7 @@ CheckP0Down:
 .P0DownPressed:              ;    else:
     dec BoyYPos              ;        decrement Y position
     lda #0
-    sta BoyAnimOffset        ;        set jet animation frame to zero
+    sta BoyAnimOffset        ;        set boy animation frame to zero
 
 CheckP0Left:
     lda #%01000000           ; joystick left for player 0
@@ -504,7 +486,7 @@ CheckP0Left:
 
 .P0LeftPressed:              ;    else:
     dec BoyXPos              ;        decrement X position
-    lda #JET_HEIGHT
+    lda #BOY_HEIGHT
     sta BoyAnimOffset        ;        set new offset to display second frame
 
 CheckP0Right:
@@ -517,7 +499,7 @@ CheckP0Right:
 
 .P0RightPressed:             ;    else:
     inc BoyXPos              ;        increment X position
-    lda #JET_HEIGHT
+    lda #BOY_HEIGHT
     sta BoyAnimOffset        ;        set new offset to display second frame
 
 CheckButtonPressed:
@@ -561,15 +543,6 @@ EndInputCheck:               ; fallback when no input was performed
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Calculations to update position for next frame
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;UpdateBomberPosition:
-;    lda BomberYPos
-;    clc
-;    cmp #0                   ; compare bomber y-position with 0
-;    bmi .ResetBomberPosition ; if it is < 0, then reset y-position to the top
-;    dec BomberYPos           ; else, decrement enemy y-position for next frame
-;    jmp EndPositionUpdate
-;.ResetBomberPosition:
-;    jsr GetRandomBomberPos   ; call subroutine for random bomber position
 
 .SetScoreValues:
     sed                      ; set BCD mode for score and timer values
@@ -650,9 +623,9 @@ FireWorked subroutine
     rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Generate audio for the jet engine sound based on the jet y-position
+;; Generate audio for the boy engine sound based on the boy y-position
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; The frequency/pitch will be modified based on the jet current y-position.
+;; The frequency/pitch will be modified based on the boy current y-position.
 ;; Normally, the TIA audio frequency goes from 0 (highest) to 31 (lowest).
 ;; We subtract 31 - (BoyYPos/8) to achieve the desired final pitch value.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -674,7 +647,7 @@ GenerateBoySound subroutine
     lda #2
     sta AUDC0                ; set the audio control register to white noise
 
-    lda BoyYPos              ; loads the accumulator with the jet y-position
+    lda BoyYPos              ; loads the accumulator with the boy y-position
     lsr
     lsr
     lsr                      ; divide the accumulator by 8 (using right-shifts)
@@ -690,10 +663,8 @@ GenerateBoySound subroutine
 ;; Set the colors for the terrain and river to green & blue
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 SetTerrain subroutine
-;    lda #$C2
     lda #$03
     sta TerrainColor         ; set terrain color to green
-;    lda #$84
     lda #$60
     sta RiverColor           ; set river color to blue
     rts
@@ -730,36 +701,6 @@ GameOver subroutine
     sta Score                ; Score = 0
     rts
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Subroutine to generate a Linear-Feedback Shift Register random number
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Generate a LFSR random number for the X-position of the bomber.
-;; Divide the random value by 4 to limit the size of the result to match river.
-;; Add 30 to compensate for the left green playfield
-;; The routine also sets the Y-position of the bomber to the top of the screen.
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;GetRandomBomberPos subroutine
-;    lda Random
-;    asl
-;    eor Random
-;    asl
-;    eor Random
-;    asl
-;    asl
-;    eor Random
-;    asl
-;    rol Random               ; performs a series of shifts and bit operations
-;    lsr
-;    lsr                      ; divide the value by 4 with 2 right shifts
-;    sta BomberXPos           ; save it to the variable BomberXPos
-;    lda #30
-;    adc BomberXPos           ; adds 30 + BomberXPos to compensate for left PF
-;    sta BomberXPos           ; and sets the new value to the bomber x-position
-;
-;    lda #96
-;    sta BomberYPos           ; set the y-position to the top of the screen
-;
-;    rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Subroutine to handle scoreboard digits to be displayed on the screen
@@ -914,38 +855,6 @@ Digits:
     .byte %01000100          ; #   #
     .byte %01000100          ; #   #
 
-BoySprite:
-    .byte #%00000000         ;
-    .byte #%00010100         ;   # #
-    .byte #%01111111         ; #######
-    .byte #%00111110         ;  #####
-    .byte #%00011100         ;   ###
-    .byte #%00011100         ;   ###
-    .byte #%00001000         ;    #
-    .byte #%00001000         ;    #
-    .byte #%00001000         ;    #
-
-BoySpriteTurn:
-    .byte #%00000000         ;
-    .byte #%00001000         ;    #
-    .byte #%00111110         ;  #####
-    .byte #%00011100         ;   ###
-    .byte #%00011100         ;   ###
-    .byte #%00011100         ;   ###
-    .byte #%00001000         ;    #
-    .byte #%00001000         ;    #
-    .byte #%00001000         ;    #
-
-BomberSprite:
-    .byte #%00000000         ;
-    .byte #%00001000         ;    #
-    .byte #%00001000         ;    #
-    .byte #%00101010         ;  # # #
-    .byte #%00111110         ;  #####
-    .byte #%01111111         ; #######
-    .byte #%00101010         ;  # # #
-    .byte #%00001000         ;    #
-    .byte #%00011100         ;   ###
 
 FireSprite:
     .byte #%00000000         ;$54
@@ -969,27 +878,6 @@ ArrowSprite:
     .byte #%00000000         ;     
     .byte #%00000000         ;     
 
-BoySpriteStand:
-    .byte #%00000000
-    .byte #%00011100
-    .byte #%00011110
-    .byte #%00011110
-    .byte #%01111110
-    .byte #%00001000
-    .byte #%00011000
-    .byte #%00111000
-    .byte #%00000000
-
-BoySpriteWalk:
-    .byte #%00000000
-    .byte #%00011100
-    .byte #%00011110
-    .byte #%00111110
-    .byte #%00111110
-    .byte #%00001000
-    .byte #%00011000
-    .byte #%00111000
-    .byte #%00000000
 
 Boy1:
         .byte #%00000000;$0E
@@ -1024,38 +912,9 @@ BoyColor:
         .byte #$0E;
         .byte #$0E;
         .byte #$0E;
-;---End Color Data---
 
-;BoyColor:
-;    .byte #$00
-;    .byte #$FE
-;    .byte #$0C
-;    .byte #$0E
-;    .byte #$0E
-;    .byte #$04
-;    .byte #$BA
-;    .byte #$0E
-;    .byte #$08
-;    .byte #$00
-;    .byte #$00
-;    .byte #$00
-;    .byte #$00
-;    .byte #$00
-;    .byte #$00
-;    .byte #$00
-;    .byte #$00
-;    .byte #$00
 
 BoyColorTurn:
-;    .byte #$00
-;    .byte #$FE
-;    .byte #$0C
-;    .byte #$0E
-;    .byte #$0E
-;    .byte #$04
-;    .byte #$0E
-;    .byte #$0E
-;    .byte #$08
     .byte #$00
     .byte #$00
     .byte #$00
@@ -1140,10 +999,7 @@ Frame4:
         .byte #%00010010;$1A
         .byte #%10000000;$1A
         .byte #%00000001;$1A
-;---End Graphics Data---
 
-
-;---Color Data from PlayerPal 2600---
 ColorFrame0:
         .byte #$00;
         .byte #$00;
