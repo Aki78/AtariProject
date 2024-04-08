@@ -12,8 +12,8 @@
     seg.u Variables
     org $80
 
-JetXPos         byte         ; player 0 x-position
-JetYPos         byte         ; player 0 y-position
+BoyXPos         byte         ; player 0 x-position
+BoyYPos         byte         ; player 0 y-position
 BomberXPos      byte         ; player 1 x-position
 BomberYPos      byte         ; player 1 y-position
 MissileXPos     byte         ; missile x-position
@@ -25,12 +25,12 @@ Timer           byte         ; 2-digit timer stored as BCD
 Temp            byte         ; auxiliary variable to store temp values
 OnesDigitOffset word         ; lookup table offset for the score Ones digit
 TensDigitOffset word         ; lookup table offset for the score Tens digit
-JetSpritePtr    word         ; pointer to player0 sprite lookup table
-JetColorPtr     word         ; pointer to player0 color lookup table
+BoySpritePtr    word         ; pointer to player0 sprite lookup table
+BoyColorPtr     word         ; pointer to player0 color lookup table
 ArrowSpritePtr  word         ; pointer to Arrow sprite lookup table
 BomberSpritePtr word         ; pointer to player1 sprite lookup table
 BomberColorPtr  word         ; pointer to player1 color lookup table
-JetAnimOffset   byte         ; player0 frame offset for sprite animation
+BoyAnimOffset   byte         ; player0 frame offset for sprite animation
 BomberAnimOffset   byte         ; player1 frame offset for sprite animation
 Random          byte         ; used to generate random bomber x-position
 ScoreSprite     byte         ; store the sprite bit pattern for the score
@@ -65,9 +65,9 @@ Reset:
 ;; Initialize RAM variables
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     lda #68
-    sta JetXPos              ; JetXPos = 68
+    sta BoyXPos              ; BoyXPos = 68
     lda #0
-    sta JetYPos              ; JetYPos = 10
+    sta BoyYPos              ; BoyYPos = 10
     lda #62
     sta BomberXPos           ; BomberXPos = 62
     lda #75
@@ -111,14 +111,14 @@ Reset:
 ;; Initialize the pointers to the correct lookup table adresses
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     lda #<Boy1
-    sta JetSpritePtr         ; lo-byte pointer for jet sprite lookup table
+    sta BoySpritePtr         ; lo-byte pointer for jet sprite lookup table
     lda #>Boy1
-    sta JetSpritePtr+1       ; hi-byte pointer for jet sprite lookup table
+    sta BoySpritePtr+1       ; hi-byte pointer for jet sprite lookup table
 
     lda #<BoyColor
-    sta JetColorPtr          ; lo-byte pointer for jet color lookup table
+    sta BoyColorPtr          ; lo-byte pointer for jet color lookup table
     lda #>BoyColor
-    sta JetColorPtr+1        ; hi-byte pointer for jet color lookup table
+    sta BoyColorPtr+1        ; hi-byte pointer for jet color lookup table
 
     lda #<ArrowSprite
     sta ArrowSpritePtr          ; lo-byte pointer for Arrow lookup table
@@ -202,7 +202,7 @@ StartFrame:
 .ResetFireWork
 
 ;;;; jet x pos logic
-    lda JetXPos
+    lda BoyXPos
     ldy #0
     jsr SetObjectXPos        ; set player0 horizontal position
 
@@ -257,7 +257,7 @@ StartFrame:
 
     jsr CalculateDigitOffset ; calculate scoreboard digits lookup table offset
 
-    jsr GenerateJetSound     ; configure and enable our jet engine audio
+    jsr GenerateBoySound     ; configure and enable our jet engine audio
 
     sta WSYNC
     sta HMOVE                ; apply the horizontal offsets previously set
@@ -368,22 +368,22 @@ GameVisibleLine:
 .GameLineLoop:
     DRAW_MISSILE             ; macro to check if we should draw the missile
 
-.AreWeInsideJetSprite:
+.AreWeInsideBoySprite:
     txa                      ; transfer X to A
     sec                      ; make sure carry flag is set before subtraction
-    sbc JetYPos              ; subtract sprite Y-coordinate
+    sbc BoyYPos              ; subtract sprite Y-coordinate
     cmp #JET_HEIGHT          ; are we inside the sprite height bounds?
     bcc .DrawSpriteP0        ; if result < SpriteHeight, call the draw routine
     lda #0                   ; else, set lookup index to zero
 
 .DrawSpriteP0:
     clc                      ; clear carry flag before addition
-    adc JetAnimOffset        ; jump to correct sprite frame address in memory
+    adc BoyAnimOffset        ; jump to correct sprite frame address in memory
     tay                      ; load Y so we can work with the pointer
-    lda (JetSpritePtr),Y     ; load player0 bitmap data from lookup table
+    lda (BoySpritePtr),Y     ; load player0 bitmap data from lookup table
     sta WSYNC                ; wait for scanline
     sta GRP0                 ; set graphics for player0
-    lda (JetColorPtr),Y      ; load player color from lookup table
+    lda (BoyColorPtr),Y      ; load player color from lookup table
     sta COLUP0               ; set color of player 0
 
 .AreWeInsideBomberSprite:
@@ -450,7 +450,7 @@ GameVisibleLine:
     bne .GameLineLoop        ; repeat next main game scanline until finished
 
     lda #0
-    sta JetAnimOffset        ; reset jet animation frame to zero each frame
+    sta BoyAnimOffset        ; reset jet animation frame to zero each frame
 
     sta WSYNC                ; wait for a scanline
 
@@ -473,52 +473,52 @@ CheckP0Up:
     lda #%00010000           ; joystick up for player 0
     bit SWCHA
     bne CheckP0Down
-    lda JetYPos
+    lda BoyYPos
     cmp #70                  ; if (player0 Y position > 70)
     bpl CheckP0Down          ;    then: skip increment
 .P0UpPressed:                ;    else:
-;    inc JetYPos              ;        increment Y position
+;    inc BoyYPos              ;        increment Y position
     lda #0
-    sta JetAnimOffset        ;        set jet animation frame to zero
+    sta BoyAnimOffset        ;        set jet animation frame to zero
 
 CheckP0Down:
     lda #%00100000           ; joystick down for player 0
     bit SWCHA
     bne CheckP0Left
-    lda JetYPos
+    lda BoyYPos
     cmp #5                   ; if (player0 Y position < 5)
     bmi CheckP0Left          ;    then: skip decrement
 
 .P0DownPressed:              ;    else:
-    dec JetYPos              ;        decrement Y position
+    dec BoyYPos              ;        decrement Y position
     lda #0
-    sta JetAnimOffset        ;        set jet animation frame to zero
+    sta BoyAnimOffset        ;        set jet animation frame to zero
 
 CheckP0Left:
     lda #%01000000           ; joystick left for player 0
     bit SWCHA
     bne CheckP0Right
-    lda JetXPos
+    lda BoyXPos
     cmp #35                  ; if (player0 X position < 35)
     bmi CheckP0Right         ;    then: skip decrement
 
 .P0LeftPressed:              ;    else:
-    dec JetXPos              ;        decrement X position
+    dec BoyXPos              ;        decrement X position
     lda #JET_HEIGHT
-    sta JetAnimOffset        ;        set new offset to display second frame
+    sta BoyAnimOffset        ;        set new offset to display second frame
 
 CheckP0Right:
     lda #%10000000           ; joystick right for player 0
     bit SWCHA
     bne CheckButtonPressed
-    lda JetXPos
+    lda BoyXPos
     cmp #100                 ; if (player0 X position > 100)
     bpl CheckButtonPressed   ;    then: skip increment
 
 .P0RightPressed:             ;    else:
-    inc JetXPos              ;        increment X position
+    inc BoyXPos              ;        increment X position
     lda #JET_HEIGHT
-    sta JetAnimOffset        ;        set new offset to display second frame
+    sta BoyAnimOffset        ;        set new offset to display second frame
 
 CheckButtonPressed:
     lda #%10000000           ; if button is pressed
@@ -532,11 +532,11 @@ CheckButtonPressed:
 .ButtonPressed:
     lda #0
     sta CanShootFirework     ; can't fire firework
-    lda JetXPos
+    lda BoyXPos
     clc
     adc #5
     sta MissileXPos          ; set the missile X position equal to the player 0
-    lda JetYPos
+    lda BoyYPos
     clc
     adc #8
     sta MissileYPos          ; set the missile Y position equal to the player 0
@@ -654,9 +654,9 @@ FireWorked subroutine
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; The frequency/pitch will be modified based on the jet current y-position.
 ;; Normally, the TIA audio frequency goes from 0 (highest) to 31 (lowest).
-;; We subtract 31 - (JetYPos/8) to achieve the desired final pitch value.
+;; We subtract 31 - (BoyYPos/8) to achieve the desired final pitch value.
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-GenerateJetSound subroutine
+GenerateBoySound subroutine
     lda #1
     cmp FireIsWorking
     beq .TurnSoundOn
@@ -674,7 +674,7 @@ GenerateJetSound subroutine
     lda #2
     sta AUDC0                ; set the audio control register to white noise
 
-    lda JetYPos              ; loads the accumulator with the jet y-position
+    lda BoyYPos              ; loads the accumulator with the jet y-position
     lsr
     lsr
     lsr                      ; divide the accumulator by 8 (using right-shifts)
@@ -914,7 +914,7 @@ Digits:
     .byte %01000100          ; #   #
     .byte %01000100          ; #   #
 
-JetSprite:
+BoySprite:
     .byte #%00000000         ;
     .byte #%00010100         ;   # #
     .byte #%01111111         ; #######
@@ -925,7 +925,7 @@ JetSprite:
     .byte #%00001000         ;    #
     .byte #%00001000         ;    #
 
-JetSpriteTurn:
+BoySpriteTurn:
     .byte #%00000000         ;
     .byte #%00001000         ;    #
     .byte #%00111110         ;  #####
@@ -1026,7 +1026,7 @@ BoyColor:
         .byte #$0E;
 ;---End Color Data---
 
-JetColor:
+;BoyColor:
 ;    .byte #$00
 ;    .byte #$FE
 ;    .byte #$0C
@@ -1036,17 +1036,17 @@ JetColor:
 ;    .byte #$BA
 ;    .byte #$0E
 ;    .byte #$08
-    .byte #$00
-    .byte #$00
-    .byte #$00
-    .byte #$00
-    .byte #$00
-    .byte #$00
-    .byte #$00
-    .byte #$00
-    .byte #$00
+;    .byte #$00
+;    .byte #$00
+;    .byte #$00
+;    .byte #$00
+;    .byte #$00
+;    .byte #$00
+;    .byte #$00
+;    .byte #$00
+;    .byte #$00
 
-JetColorTurn:
+BoyColorTurn:
 ;    .byte #$00
 ;    .byte #$FE
 ;    .byte #$0C
