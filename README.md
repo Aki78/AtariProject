@@ -22,6 +22,13 @@ I prepared for this project by studying six chapters from "Digital Design and Co
 
 Using a template from the "Learn Assembly Language by Making Games for the Atari 2600" course as a foundation, I added new features, logic, and graphics to create a unique game experience.
 
+## Game Mechanics
 
+## Technical Details
 
+## Team
+
+## Lesson Learned
+
+## Conclusion
 
