@@ -26,9 +26,6 @@ Using a template from the "Learn Assembly Language by Making Games for the Atari
 Player 0 (Teenager) can move left and right, as well as shoot using the space button. A successful shot that causes a fireworks explosion will grant 1 point to Player 0. However, if Player 0 is positioned directly below the firework when it explodes, their score will be reset to 0.
 
 
-<p align="center">
-    <img src="./Portfolio/gameImage.png>
-</p>
 
 Player 1 can intercept the firework as it ascends. If Player 1 successfully intercepts the firework, 2 points will be deducted from Player 0's score.
 
