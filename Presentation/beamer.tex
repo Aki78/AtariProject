@@ -35,7 +35,7 @@
 \usepackage{graphicx} % For including images
 \usepackage{booktabs} % For nicer tables
 
-\title[Title]{Fireworks (Atari 2600)}
+\title[Fireworks]{Fireworks (Atari 2600)}
 \author{Aki, Pooria }
 \institute[Metropolia UAS]{Metropolia University of Applied Sciences}
 \date{\today}
@@ -46,13 +46,13 @@
   \titlepage
 \end{frame}
 
-\begin{frame}{Table of Contents}
-  \tableofcontents
-\end{frame}
+%\begin{frame}{Table of Contents}
+%  \tableofcontents
+%\end{frame}
 
 % Section and Subsection in the presentation
 
-\section{Introduction}
+%\section{Introduction}
 
 
 %\begin{frame}{History}
@@ -73,13 +73,19 @@
     \begin{figure}
         \centering
         \includegraphics[width=0.8\textwidth]{atari2600.png} % Adjust the size as needed
-        \caption{Atari 2600 Console}
+        \caption{Atari 2600 Console. 160 x 192 pixels. \\ 4KB ROM. 64KB RAM. 1.16MH.}
     \end{figure}
 \end{frame}
 
-\section{Algorithms}
 
 
+\begin{frame}{Study Material}
+  \begin{itemize}
+    \item Book: Digital Design and Computer Architecture by Sarah Harris
+    \item Online Course: Learn Assembly Language by Making Games for Atari 2600 by Gustavo Pezzi
+  \end{itemize}
+
+\end{frame}
 
 
 
@@ -88,24 +94,22 @@
         \centering
         \includegraphics[width=0.8\textwidth]{monitor.png} % Adjust the size as needed
 
-        \caption{Monitor}
+        \caption{CRT Television}
     \end{figure}
-\href{https://en.wikipedia.org/wiki/Alpha\%E2\%80\%93beta_pruning}{Wikipedia}
 \end{frame}
 
 
-\begin{frame}{How to think of the monitor}
+\begin{frame}{TIA}
     \begin{figure}
         \centering
         \includegraphics[width=0.8\textwidth]{screen_whole.png} % Adjust the size as needed
 
         \caption{8 x 8 Array of Enums}
     \end{figure}
-\href{https://en.wikipedia.org/wiki/Alpha\%E2\%80\%93beta_pruning}{Wikipedia}
 \end{frame}
 
 
-\begin{frame}{How to think of the monitor}
+\begin{frame}{TIA}
     \begin{figure}
         \centering
         \includegraphics[width=0.8\textwidth]{TIA_diagram.png} % Adjust the size as needed
@@ -115,6 +119,41 @@
 \end{frame}
 
 
+\begin{frame}{Code Example}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{assembly.png} % Adjust the size as needed
+
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Fireworks}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.6\textwidth]{cover.jpg} % Adjust the size as needed
+
+    \end{figure}
+\end{frame}
+
+\begin{frame}{Fireworks}
+    \begin{figure}
+        \centering
+        \includegraphics[width=0.8\textwidth]{gameImage.png} % Adjust the size as needed
+        \caption{Use an emulator to run the cart.bin file from itch.\\ For example Stella Emulator.}
+
+    \end{figure}
+\end{frame}
+
+
+\begin{frame}{Conclusion}
+        \centering
+  \begin{itemize}
+    \item We learned how to manage memory and clock cycles in a constraint environment.
+    \item We learned Assembly and how instruction sets work.
+    \item We learned how CRT Televisions and TIA works.
+  \end{itemize}
+
+\end{frame}
 
 
 
