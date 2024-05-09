@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.2.2)  24 FEB 2024 13:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2024.2.2)  7 MAY 2024 10:19
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -721,30 +721,6 @@ Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \@lastruleclass=\count334
 \@thisrulewidth=\dimen303
 )
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 43.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\alpha' on input line 43.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 43.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 43.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\beta' on input line 43.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 43.
-
 (/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2022-01-12 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count335
@@ -929,114 +905,116 @@ Dictionary: translator-theorem-dictionary, Language: English
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
  (./beamer.nav)
-LaTeX Font Info:    Trying to load font information for U+msa on input line 47.
-
-
-(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2013/01/14 v3.01 AMS symbols A
-)
-LaTeX Font Info:    Trying to load font information for U+msb on input line 47.
-
-
-(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2013/01/14 v3.01 AMS symbols B
-)
-LaTeX Font Info:    Trying to load font information for OT1+mathkerncmss on inp
-ut line 47.
-
-(/usr/share/texlive/texmf-dist/tex/latex/sansmathaccent/ot1mathkerncmss.fd
-File: ot1mathkerncmss.fd 2020/01/31 Fontinst v1.933 font definitions for OT1/ma
-thkerncmss.
-)
-<logo.png, id=38, 617.30624pt x 658.46pt>
+<logo.png, id=26, 617.30624pt x 658.46pt>
 File: logo.png Graphic file (type png)
 <use logo.png>
 Package pdftex.def Info: logo.png  used on input line 47.
 (pdftex.def)             Requested size: 26.66609pt x 28.45274pt.
-
-[1
+ [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./logo.png>]
-(./beamer.toc)
-File: logo.png Graphic file (type png)
-<use logo.png>
-Package pdftex.def Info: logo.png  used on input line 51.
-(pdftex.def)             Requested size: 26.66609pt x 28.45274pt.
- [2
-
-]
-File: logo.png Graphic file (type png)
-<use logo.png>
-Package pdftex.def Info: logo.png  used on input line 69.
-(pdftex.def)             Requested size: 26.66609pt x 28.45274pt.
- [3
-
-]
+<atari2600.png, id=59, 578.16pt x 353.52075pt>
+File: atari2600.png Graphic file (type png)
+<use atari2600.png>
+Package pdftex.def Info: atari2600.png  used on input line 78.
+(pdftex.def)             Requested size: 273.83728pt x 167.43861pt.
 File: logo.png Graphic file (type png)
 <use logo.png>
 Package pdftex.def Info: logo.png  used on input line 78.
 (pdftex.def)             Requested size: 26.66609pt x 28.45274pt.
- [4
+ [2
+
+ <./atari2600.png>]
+File: logo.png Graphic file (type png)
+<use logo.png>
+Package pdftex.def Info: logo.png  used on input line 89.
+(pdftex.def)             Requested size: 26.66609pt x 28.45274pt.
+ [3
 
 ]
-<board_representation.png, id=160, 902.37125pt x 453.695pt>
-File: board_representation.png Graphic file (type png)
-<use board_representation.png>
-Package pdftex.def Info: board_representation.png  used on input line 88.
-(pdftex.def)             Requested size: 273.83728pt x 137.68103pt.
+<monitor.png, id=116, 598.235pt x 370.38374pt>
+File: monitor.png Graphic file (type png)
+<use monitor.png>
+Package pdftex.def Info: monitor.png  used on input line 100.
+(pdftex.def)             Requested size: 273.83728pt x 169.54214pt.
 File: logo.png Graphic file (type png)
 <use logo.png>
-Package pdftex.def Info: logo.png  used on input line 88.
+Package pdftex.def Info: logo.png  used on input line 100.
 (pdftex.def)             Requested size: 26.66609pt x 28.45274pt.
- [5
+ [4
 
- <./board_representation.png>]
-<minimax.png, id=188, 1027.84pt x 521.95pt>
-File: minimax.png Graphic file (type png)
-<use minimax.png>
-Package pdftex.def Info: minimax.png  used on input line 101.
-(pdftex.def)             Requested size: 273.83728pt x 139.05676pt.
+ <./monitor.png>]
+<screen_whole.png, id=144, 951.555pt x 792.9625pt>
+File: screen_whole.png Graphic file (type png)
+<use screen_whole.png>
+Package pdftex.def Info: screen_whole.png  used on input line 110.
+(pdftex.def)             Requested size: 273.83728pt x 228.19879pt.
+
+Overfull \vbox (33.1282pt too high) detected at line 110
+ []
+
 File: logo.png Graphic file (type png)
 <use logo.png>
-Package pdftex.def Info: logo.png  used on input line 101.
+Package pdftex.def Info: logo.png  used on input line 110.
+(pdftex.def)             Requested size: 26.66609pt x 28.45274pt.
+[5
+
+ <./screen_whole.png>]
+<TIA_diagram.png, id=171, 1584.92125pt x 580.1675pt>
+File: TIA_diagram.png Graphic file (type png)
+<use TIA_diagram.png>
+Package pdftex.def Info: TIA_diagram.png  used on input line 120.
+(pdftex.def)             Requested size: 273.83728pt x 100.23834pt.
+File: logo.png Graphic file (type png)
+<use logo.png>
+Package pdftex.def Info: logo.png  used on input line 120.
 (pdftex.def)             Requested size: 26.66609pt x 28.45274pt.
  [6
 
- <./minimax.png>]
+ <./TIA_diagram.png>]
+<assembly.png, id=198, 1133.23375pt x 841.1425pt>
+File: assembly.png Graphic file (type png)
+<use assembly.png>
+Package pdftex.def Info: assembly.png  used on input line 129.
+(pdftex.def)             Requested size: 273.83728pt x 203.25165pt.
 File: logo.png Graphic file (type png)
 <use logo.png>
-Package pdftex.def Info: logo.png  used on input line 130.
+Package pdftex.def Info: logo.png  used on input line 129.
 (pdftex.def)             Requested size: 26.66609pt x 28.45274pt.
-[7
+ [7
 
-]
-<playable.png, id=248, 767.86874pt x 604.2575pt>
-File: playable.png Graphic file (type png)
-<use playable.png>
-Package pdftex.def Info: playable.png  used on input line 138.
-(pdftex.def)             Requested size: 239.60567pt x 188.55339pt.
+ <./assembly.png>]
+<cover.jpg, id=226, 1027.84pt x 1027.84pt>
+File: cover.jpg Graphic file (type jpg)
+<use cover.jpg>
+Package pdftex.def Info: cover.jpg  used on input line 137.
+(pdftex.def)             Requested size: 205.37926pt x 205.37614pt.
 File: logo.png Graphic file (type png)
 <use logo.png>
-Package pdftex.def Info: logo.png  used on input line 138.
+Package pdftex.def Info: logo.png  used on input line 137.
 (pdftex.def)             Requested size: 26.66609pt x 28.45274pt.
  [8
 
- <./playable.png>]
-<play1500.png, id=275, 541.02126pt x 646.415pt>
-File: play1500.png Graphic file (type png)
-<use play1500.png>
-Package pdftex.def Info: play1500.png  used on input line 148.
-(pdftex.def)             Requested size: 136.91603pt x 163.5859pt.
-File: logo.png Graphic file (type png)
-<use logo.png>
-Package pdftex.def Info: logo.png  used on input line 148.
-(pdftex.def)             Requested size: 26.66609pt x 28.45274pt.
- [9
+ <./cover.jpg>]
+<gameImage.png, id=254, 960.58875pt x 675.52374pt>
+File: gameImage.png Graphic file (type png)
+<use gameImage.png>
+Package pdftex.def Info: gameImage.png  used on input line 146.
+(pdftex.def)             Requested size: 273.83728pt x 192.5778pt.
 
- <./play1500.png>]
+Overfull \vbox (9.50722pt too high) detected at line 146
+ []
+
 File: logo.png Graphic file (type png)
 <use logo.png>
-Package pdftex.def Info: logo.png  used on input line 177.
+Package pdftex.def Info: logo.png  used on input line 146.
+(pdftex.def)             Requested size: 26.66609pt x 28.45274pt.
+[9
+
+ <./gameImage.png>]
+File: logo.png Graphic file (type png)
+<use logo.png>
+Package pdftex.def Info: logo.png  used on input line 157.
 (pdftex.def)             Requested size: 26.66609pt x 28.45274pt.
  [10
 
@@ -1052,30 +1030,23 @@ Package pdftex.def Info: logo.png  used on input line 177.
 
  (./beamer.aux)
 Package rerunfilecheck Info: File `beamer.out' has not changed.
-(rerunfilecheck)             Checksum: C49E513C455F5FABA6502C79F5764D80;337.
+(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 23224 strings out of 478287
- 455578 string characters out of 5849290
- 700555 words of memory out of 5000000
- 40923 multiletter control sequences out of 15000+600000
- 480407 words of font info for 68 fonts, out of 8000000 for 9000
+ 23089 strings out of 478287
+ 452502 string characters out of 5849290
+ 700384 words of memory out of 5000000
+ 40815 multiletter control sequences out of 15000+600000
+ 471376 words of font info for 35 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 128i,15n,122p,386b,610s stack positions out of 5000i,500n,10000p,200000b,80000s
-pdfTeX warning (dest): name{Navigation11} has been referenced but does not ex
-ist, replaced by a fixed one
-
-</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/
-share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/
-texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/share/texliv
-e/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/share/texlive/texmf-dist/
-fonts/type1/public/amsfonts/cm/cmssbx10.pfb></usr/share/texlive/texmf-dist/font
-s/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on beamer.pdf (10 pages, 301269 bytes).
+ 128i,15n,122p,386b,562s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></us
+r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb></usr/shar
+e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb>
+Output written on beamer.pdf (10 pages, 2873318 bytes).
 PDF statistics:
- 368 PDF objects out of 1000 (max. 8388607)
- 317 compressed objects within 4 object streams
- 26 named destinations out of 1000 (max. 500000)
- 140 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 326 PDF objects out of 1000 (max. 8388607)
+ 282 compressed objects within 3 object streams
+ 21 named destinations out of 1000 (max. 500000)
+ 125 words of extra memory for PDF output out of 10000 (max. 10000000)
 
